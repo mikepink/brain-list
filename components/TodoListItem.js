@@ -6,11 +6,11 @@ import {
 } from 'react-native';
 
 import Checkbox from './Checkbox'
+import FadeIn from './FadeIn'
 import { TodoListStyles } from '../styles';
 
 const TodoListItem = ({item, listID, onChangeText, onPressCheckbox}) => (
-  <View
-    style={{...TodoListStyles.todoItem}}>
+  <FadeIn style={{...TodoListStyles.todoItem}}>
     <Checkbox checked={item.status === -1} onPress={onPressCheckbox} />
     <View style={{...TodoListStyles.todoTextWrapper}}>
       {
@@ -27,7 +27,7 @@ const TodoListItem = ({item, listID, onChangeText, onPressCheckbox}) => (
           />
       }
     </View>
-  </View>
+  </FadeIn>
 );
 
 export default TodoListItem;
