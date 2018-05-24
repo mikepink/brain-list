@@ -34,10 +34,10 @@ export function fetchLists() {
     dispatch(requestLists());
     DB.transaction((tx) => {
       tx.executeSql(
-        'SELECT id, name, updated_time FROM lists ORDER BY updated_time DESC',
+        'SELECT lists.id, lists.name, lists.updated_time, COUNT(items.id) AS open_items FROM lists LEFT OUTER JOIN items ON items.list = lists.id AND items.status = 1 GROUP BY lists.id ORDER BY lists.updated_time DESC',
         null,
         (tx, resultSet) => {
-          dispatch(receiveLists(resultSet));  
+          dispatch(receiveLists(resultSet));
         },
         (_, e) => console.error(e)
       );
@@ -79,7 +79,7 @@ export function addList(listName = '', now) {
           null,
           (_, error) => console.log('exec error', error),
         )
-      }, 
+      },
       null,
       () => {
         dispatch(listAdded());
@@ -113,7 +113,7 @@ export function fetchItems(listID) {
         'SELECT id, label, status, updated_time FROM items WHERE list = ? ORDER BY updated_time DESC',
         [listID],
         (tx, resultSet) => {
-          dispatch(receiveItems(listID, resultSet));  
+          dispatch(receiveItems(listID, resultSet));
         },
         (_, e) => console.error(e)
       );
@@ -163,7 +163,7 @@ export function addItem(label = '', listID, now) {
   if (label === '') {
     return {type: USER_INPUT_ERROR};
   }
-  
+
   return (dispatch) => {
     dispatch(submitList());
     DB.transaction(
@@ -174,7 +174,7 @@ export function addItem(label = '', listID, now) {
           (_, resultSet) => dispatch(itemAdded(resultSet.insertId)),
           (_, error) => console.log('exec error', error),
         )
-      }, 
+      },
       null,
       () => dispatch(fetchItems(listID)),
       (_, error) => console.log('tx error', error),

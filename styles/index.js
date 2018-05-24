@@ -1,11 +1,23 @@
 export const HomeScreenStyles = {
   listItem: {
+    alignItems: 'center',
     backgroundColor: '#FFFFFF',
     borderColor: '#F2E9E1',
     borderBottomWidth: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     padding: 10,
   },
+  listItemBadge: {
+    backgroundColor: '#1693A5',
+    borderRadius: 4,
+    padding: 4,
+  },
+  listItemBadgeText: {
+    color: '#FFFFFF',
+  },
   listItemText: {
+    flex: 9,
     fontSize: 18,
   },
 };
@@ -46,7 +58,7 @@ export const TodoListStyles = {
     marginBottom: 5,
     marginTop: 5,
     paddingBottom: 20,
-    marginTop: 20, 
+    marginTop: 20,
   },
   secondaryTodosToggleText: {
     color: '#999999',

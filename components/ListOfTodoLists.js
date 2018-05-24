@@ -13,10 +13,10 @@ const ListOfTodoLists = ({lists, navigation}) => {
         key={list.id}
         list={list}
         navigation={navigation}
-      /> 
+      />
     );
   }
-  
+
   return (
     <View>
       {listItems}
