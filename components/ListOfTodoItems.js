@@ -15,11 +15,11 @@ const ListOfTodoItems = ({items, listID, onChangeText, onPressCheckbox}) => {
         item={item}
         listID={listID}
         onChangeText={onChangeText}
-        onPressCheckbox={() => onPressCheckbox(item.id, item.status * -1)}
+        onPressCheckbox={() => onPressCheckbox(item, item.status * -1)}
       />
     );
   }
-  
+
   return (
     <View>
       {todos}

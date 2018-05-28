@@ -7,16 +7,16 @@ import {
 
 import { HomeScreenStyles } from '../styles';
 
-const TodoListEntryPoint = ({list, navigation}) => (
+const TodoListEntryPoint = ({badgeValue, list, navigation}) => (
   <TouchableOpacity
     onPress={() => {navigation.navigate('List', {listID: list.id, listName: list.name})}}
     style={{...HomeScreenStyles.listItem}}>
     <Text style={{...HomeScreenStyles.listItemText}}>
       {list.name}
     </Text>
-    {list.open_items === 0 ? null :
+    {badgeValue === 0 ? null :
       <View style={{...HomeScreenStyles.listItemBadge}}>
-        <Text style={{...HomeScreenStyles.listItemBadgeText}}>{list.open_items}</Text>
+        <Text style={{...HomeScreenStyles.listItemBadgeText}}>{badgeValue}</Text>
       </View>
     }
   </TouchableOpacity>

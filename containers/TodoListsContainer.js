@@ -11,9 +11,10 @@ class TodoListsContainer extends Component {
   }
 
   render() {
-    const { lists, navigation } = this.props;
+    const { badgesByListID, lists, navigation } = this.props;
     return (
       <ListOfTodoLists
+        badgesByListID={badgesByListID}
         lists={lists}
         navigation={navigation}
       />
@@ -22,6 +23,7 @@ class TodoListsContainer extends Component {
 }
 
 const mapStateToProps = state => ({
+  badgesByListID: state.badgesByListID,
   lists: state.lists.lists,
 });
 

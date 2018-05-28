@@ -43,9 +43,39 @@ const lists = (
     case RECEIVE_LISTS:
       return {...state, isFetching: false, lists: action.lists};
     default:
-      return state; 
+      return state;
   }
 };
+
+const badgesByListID = (
+  state = {},
+  action,
+) => {
+  let curValue;
+  switch (action.type) {
+    case RECEIVE_LISTS:
+      const newState = {};
+      action.lists.forEach(list => {
+        newState[list.id] = list.open_items;
+      });
+      return newState;
+    case ITEM_ADDED:
+      curValue = state.hasOwnProperty(action.listID) ? state[action.listID] : 0;
+      return {...state, [action.listID]: curValue + 1};
+    case SUBMIT_ITEM_EDIT:
+      const listID = action.item.list;
+      const statusIdx = action.columns.indexOf('status');
+      if (statusIdx === -1) {
+        return state;
+      }
+
+      curValue = state.hasOwnProperty(listID) ? state[listID] : 0;
+      // Incomplete status value is 1, complete is -1.
+      return {...state, [listID]: curValue + (action.values[statusIdx] - action.item.status) / 2};
+    default:
+      return state;
+  }
+}
 
 const addItem = (
   state = {addItemText: '', isSubmitting: false},
@@ -59,7 +89,7 @@ const addItem = (
       case ITEM_ADDED:
         return {...state, addItemText: '', isSubmitting: false};
       default:
-        return state;  
+        return state;
   }
 };
 
@@ -96,7 +126,7 @@ const itemsByID = (
     case SUBMIT_ITEM_EDIT:
       itemsByID = Object.assign({}, state.itemsByID);
       action.columns.forEach((column, i) => {
-        itemsByID[action.itemID][column] = action.values[i];
+        itemsByID[action.item.id][column] = action.values[i];
       });
       return {...state, itemsByID};
     default:
@@ -119,6 +149,7 @@ const todoListView = (
 const rootReducer = combineReducers({
   addItem,
   addList,
+  badgesByListID,
   itemsByID,
   itemsByListID,
   lists,

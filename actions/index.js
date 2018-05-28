@@ -110,7 +110,7 @@ export function fetchItems(listID) {
     dispatch(requestItems());
     DB.transaction((tx) => {
       tx.executeSql(
-        'SELECT id, label, status, updated_time FROM items WHERE list = ? ORDER BY updated_time DESC',
+        'SELECT id, label, status, list, updated_time FROM items WHERE list = ? ORDER BY updated_time DESC',
         [listID],
         (tx, resultSet) => {
           dispatch(receiveItems(listID, resultSet));
@@ -134,27 +134,20 @@ export function submitItem() {
   };
 }
 
-export function itemAdded(itemID) {
+export function itemAdded(itemID, listID) {
   return {
     type: ITEM_ADDED,
     itemID,
+    listID,
   };
 }
 
-export function submitItemEdit(itemID, columns, values) {
+export function submitItemEdit(item, columns, values) {
   return {
     type: SUBMIT_ITEM_EDIT,
-    itemID,
+    item,
     columns,
     values,
-  };
-}
-
-export function itemEdited(itemID, newLabel) {
-  return {
-    type: ITEM_EDITED,
-    itemID,
-    newLabel,
   };
 }
 
@@ -171,7 +164,7 @@ export function addItem(label = '', listID, now) {
         tx.executeSql(
           'INSERT INTO items (label, list, status, creation_time, updated_time) VALUES (?, ?, ?, ?, ?);',
           [label, listID, 1, now, now],
-          (_, resultSet) => dispatch(itemAdded(resultSet.insertId)),
+          (_, resultSet) => dispatch(itemAdded(resultSet.insertId, listID)),
           (_, error) => console.log('exec error', error),
         )
       },
@@ -188,14 +181,14 @@ function updateColumnsStatement(columns) {
   ).join(', ');
 }
 
-export function updateItem(itemID, columns, values) {
+export function updateItem(item, columns, values) {
   return (dispatch) => {
-    dispatch(submitItemEdit(itemID, columns, values));
+    dispatch(submitItemEdit(item, columns, values));
     DB.transaction(
       tx => {
         tx.executeSql(
           'UPDATE items SET ' + updateColumnsStatement(columns) + ' WHERE id = ?',
-          [...values, itemID],
+          [...values, item.id],
           null,
           (_, error) => console.log('exec error', error),
         )

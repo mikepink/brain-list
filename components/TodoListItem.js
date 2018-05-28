@@ -20,7 +20,7 @@ const TodoListItem = ({item, listID, onChangeText, onPressCheckbox}) => (
             {item.label}
           </Text> :
           <TextInput
-            onChangeText={(text) => onChangeText(item.id, text)}
+            onChangeText={(text) => onChangeText(item, text)}
             returnKeyType="done"
             style={{...TodoListStyles.todoText}}
             value={item.label}
